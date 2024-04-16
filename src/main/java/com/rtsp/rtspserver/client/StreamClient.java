@@ -25,9 +25,9 @@ public class StreamClient {
                 grabber.setFormat("rtsp");
                 grabber.setOption("allowed_media_types", "video");
                 grabber.setOption("rtsp_transport", "udp");
-                grabber.setOption("stimeout", "300");
+                grabber.setOption("stimeout", "300000");
                 grabber.setOption("buffer_size", "2048000");
-                grabber.setOption("recorder_queue_size", "1024");
+                grabber.setOption("reorder_queue_size", "1024");
             }
             grabber.start();
             CanvasFrame canvasFrame = new CanvasFrame("Video Capture");

@@ -130,7 +130,6 @@ public class RtspServer {
 
     private void sendRtspFrame() {
         long delay = rtspFrameSender.getFrameSendDelay();
-        log.info("sendRtspFrame delay {}", delay);
         executor.schedule(() -> {
             rtspFrameSender.sendFrame();
             sendRtspFrame();
