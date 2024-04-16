@@ -55,10 +55,11 @@ public class RtspServer {
         }
 
         // add sps/pps to every frame
-        transferedFilePath = FileUtils.getTempDirectoryPath() + File.separator + "rtsp" + File.separator + originVideo.getName();
+        String directory = FileUtils.getTempDirectoryPath() + File.separator + "rtsp" + File.separator;
+        FileUtils.forceMkdir(new File(directory));
+        transferedFilePath = directory + originVideo.getName();
         File file = new File(transferedFilePath);
         if (!file.exists()) {
-            file.mkdirs();
             String ffmpeg = Loader.load(ffmpeg.class);
             String commond = "-i inputFile -preset ultrafast -threads 4 -c:v libx264 -x264opts keyint=50 -bsf:v dump_extra -an outputFile";
             commond = commond.replace("inputFile", originVideo.getCanonicalPath());
