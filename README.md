@@ -34,7 +34,7 @@ public class RtspClient {
 
 Then you can see the video preview window:
 
-![image-20240417010953383](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240417010953383.png)
+![image-20240417010953383](https://github.com/quantum2947/rtsp-server/blob/master/pic/image-20240417010953383.png)
 
 
 ##### Settings:
