@@ -18,7 +18,7 @@ import java.math.BigDecimal;
  * @since 2023-06-06
  */
 @Slf4j
-public class FileDocument<T> {
+public class Visiror<T> {
     private T document;
 
     private LinkBudgetLinkInfoBO linkInfo;
@@ -48,7 +48,7 @@ public class FileDocument<T> {
      * 访问接收者类.
      *
      * @param element 访问的子节点
-     * @throws LinkBudgetException link budget报告绘制异常
+     * @throws 异常
      */
     public void visit(Element element) throws LinkBudgetException {
         String className = element.attribute("class").getValue();
