@@ -1,0 +1,66 @@
+package com.huawei.iriver.plan.logic.linkbudget.build;
+
+import com.huawei.iriver.plan.logic.linkbudget.model.LinkBudgetLinkInfoBO;
+import com.huawei.iriver.plan.logic.linkbudget.model.LinkBudgetParam;
+import com.huawei.iriver.plan.logic.linkbudget.model.exception.LinkBudgetException;
+import com.huawei.iriver.plan.logic.linkbudget.util.LinkBudgetUtil;
+import com.huawei.microwave.common.utils.ExceptionLogHandler;
+import com.huawei.mnet.common.util.xml.Element;
+
+import lombok.extern.slf4j.Slf4j;
+
+import java.math.BigDecimal;
+
+/**
+ * 文件访问者类接口
+ *
+ * @param <T> document对象 excel、word等
+ * @since 2023-06-06
+ */
+@Slf4j
+public class FileDocument<T> {
+    private T document;
+
+    private LinkBudgetLinkInfoBO linkInfo;
+
+    private LinkBudgetParam param;
+
+    private String classPrefix;
+
+    /**
+     * 设置参数.
+     *
+     * @param doc         POI document对象
+     * @param linkInfo    链路数据
+     * @param param       导出LB参数
+     * @param classPrefix class包路径前缀
+     */
+    public void init(T doc, LinkBudgetLinkInfoBO linkInfo, LinkBudgetParam param, String classPrefix) {
+        linkInfo.getLinkKpi()
+                .removeIf(obj -> new BigDecimal(LinkBudgetUtil.KPI_MINVALUE).compareTo(obj.getAvailability()) == 0);
+        this.document = doc;
+        this.linkInfo = linkInfo;
+        this.param = param;
+        this.classPrefix = classPrefix;
+    }
+
+    /**
+     * 访问接收者类.
+     *
+     * @param element 访问的子节点
+     * @throws LinkBudgetException link budget报告绘制异常
+     */
+    public void visit(Element element) throws LinkBudgetException {
+        String className = element.attribute("class").getValue();
+        try {
+            LinkBudgetFileDrawer drawer = (LinkBudgetFileDrawer) Class.forName(classPrefix + className)
+                    .getMethod("getInstance").invoke(null);
+            drawer.draw(document, linkInfo, param);
+        } catch (Exception ex) {
+            log.error("Export link[{}] {} failed, {}", linkInfo.getId(), element.getName(),
+                    ExceptionLogHandler.getMessage(ex));
+            throw new LinkBudgetException(
+                    String.format("Export some tables of link[%s] failed.", linkInfo.getPhysicalLink().getLinkId()));
+        }
+    }
+}
